@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/region_colombo"
+        android:title="Colombo "/>
+    <item
+        android:id="@+id/region_kandy"
+        android:title="Kandy "/>
+    <item
+        android:id="@+id/region_jaffna"
+        android:title="Jaffna "/>
+    <item
+        android:id="@+id/region_matale"
+        android:title="Matale"/>
+    <item
+        android:id="@+id/region_kilinochi"
+        android:title="Kilinochi"/>
+    <item
+        android:id="@+id/region_mannar"
+        android:title="Mannar"/>
+    <item
+        android:id="@+id/region_mullai"
+        android:title="Mullaitivu"/>
+    <item
+        android:id="@+id/region_nuwara_eliya"
+        android:title="NuwaraEliya"/>
+    <item
+        android:id="@+id/region_ampara"
+        android:title="Ampara"/>
+    <item
+        android:id="@+id/region_anuradhapura"
+        android:title="Anuradhapura"/>
+    <item
+        android:id="@+id/region_badulla"
+        android:title="Badulla"/>
+    <item
+        android:id="@+id/region_batticaloa"
+        android:title="Batticaloa"/>
+    <item
+        android:id="@+id/region_galle"
+        android:title="Galle"/>
+    <item
+        android:id="@+id/region_gampaha"
+        android:title="Gampaha"/>
+    <item
+        android:id="@+id/region_hambantota"
+        android:title="Hambantota"/>
+    <item
+        android:id="@+id/region_kalutara"
+        android:title="Kalutara"/>
+    <item
+        android:id="@+id/region_kegalle"
+        android:title="Kegalle"/>
+    <item
+        android:id="@+id/region_kurunegala"
+        android:title="Kurunegala"/>
+    <item
+        android:id="@+id/region_matara"
+        android:title="Matara"/>
+    <item
+        android:id="@+id/region_monaragala"
+        android:title="Monaragala"/>
+    <item
+        android:id="@+id/region_polonnaruwa"
+        android:title="Polonnaruwa"/>
+    <item
+        android:id="@+id/region_puttalam"
+        android:title="Puttalam"/>
+    <item
+        android:id="@+id/region_ratnapura"
+        android:title="Ratnapura"/>
+    <item
+        android:id="@+id/region_trincomalee"
+        android:title="Trincomalee"/>
+    <item
+        android:id="@+id/region_vavuniya"
+        android:title="Vavuniya"/>
+
+</menu>

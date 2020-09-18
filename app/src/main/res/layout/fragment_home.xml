@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/text_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@drawable/main_theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_home"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="4dp"
+
+            android:background="@drawable/main_theme_radius"
+            android:clickable="true"
+            android:focusable="true"
+
+            android:focusableInTouchMode="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_dashboard" />
+
+        <ImageView
+            android:id="@+id/iv_d2d"
+            android:layout_width="90dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/launcher_transparant"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/tv_home"
+            app:layout_constraintTop_toTopOf="@+id/tv_home" />
+
+        <TextView
+            android:id="@+id/tv_d2d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Door To Delivery"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_d2d"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_d2d"
+            app:layout_constraintTop_toTopOf="@+id/iv_d2d" />
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Click here to contact us"
+            android:textAllCaps="true"
+            android:textColor="@color/mint_cream"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_home"
+            app:layout_constraintStart_toStartOf="@+id/tv_home"
+            app:layout_constraintTop_toBottomOf="@+id/tv_d2d" />
+
+        <TextView
+            android:id="@+id/et_search_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/layout_background"
+            android:focusableInTouchMode="true"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="2dp"
+            android:textSize="22sp"
+            android:hint="Search"
+            app:layout_constraintBottom_toBottomOf="@id/tv_home"
+            app:layout_constraintEnd_toEndOf="@+id/tv_home"
+            app:layout_constraintStart_toStartOf="@+id/tv_home" />
+
+
+        <TextView
+            android:id="@+id/text_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/main_theme_radius"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="Top Products"
+            android:textAlignment="textStart"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home" />
+
+        <ImageView
+            android:id="@+id/recent"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/new_items"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_cats"
+            tools:layout_editor_absoluteY="774dp" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="@drawable/main_theme"
+            android:id="@+id/rv_topItems"
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:foregroundGravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_home" />
+        <ImageView
+            android:id="@+id/tv_cats"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="fitXY"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:src="@drawable/catagories"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_topItems" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="175dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="160dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

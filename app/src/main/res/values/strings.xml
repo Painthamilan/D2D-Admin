@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">D2D-Admin</string>
+    <string name="title_activity_bottom_bar_navigation">BottomBarNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string-array name="regions">
+        <item>Colombo</item>
+        <item>Kandy</item>
+        <item>Matale</item>
+        <item>Jaffna</item>
+        <item>Kilinochi</item>
+        <item>Mullaitivu</item>
+        <item>Mannar</item>
+        <item>NuwaraEliya</item>
+        <item>Ampara</item>
+        <item>Anuradhapura</item>
+        <item>Badulla</item>
+        <item>Batticaloa</item>
+        <item>Galle</item>
+        <item>Gampaha</item>
+        <item>Hambantota</item>
+        <item>Kalutara</item>
+        <item>Kegalle</item>
+        <item>Kurunegala</item>
+        <item>Matara</item>
+        <item>Monaragala</item>
+        <item>Polonnaruwa</item>
+        <item>Puttalam</item>
+        <item>Ratnapura</item>
+        <item>Trincomalee</item>
+        <item>Vavuniya</item>
+    </string-array>
+</resources>
