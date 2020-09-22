@@ -297,6 +297,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void savePostInformation() {
         itemsRef= FirebaseDatabase.getInstance().getReference().child("Test").child("Products");
+        saveCats(hasSubCat,seletedCatagory);
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -326,8 +327,14 @@ public class AddItemActivity extends AppCompatActivity {
                             progressdialog.setMessage("Done");
 
                             progressdialog.dismiss();
+
                             Intent intent=new Intent(AddItemActivity.this,SelectRegionActivity.class);
                             intent.putExtra("PRODUCT_ID",randomid);
+                            intent.putExtra("HAS_SUBCAT",hasSubCat);
+                            intent.putExtra("CATAGORY",seletedCatagory);
+                            if (hasSubCat)
+                                intent.putExtra("SUB_CATAGORY",selectedSubCatagory);
+
                             startActivity(intent);
                         }
                     }
@@ -340,13 +347,26 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
     }
+    private void saveCats(boolean hasCats, String seletedCatagory){
+        catRef.child(seletedCatagory).child("CatagoryName").setValue(this.seletedCatagory);
+        if (hasCats){
+            catRef.child(seletedCatagory).child("SubCatagories").child(selectedSubCatagory).child("SubCatagoryName").setValue(selectedSubCatagory);
+            catRef.child(seletedCatagory).child("SubCatagories").child(selectedSubCatagory).child("Products").child(randomid).child("ProductId").setValue(randomid);
+        }else{
+            catRef.child(seletedCatagory).child("Products").child(randomid).child("ProductId").setValue(randomid);
+        }
 
+        catRef.child(this.seletedCatagory).child("HasSub").setValue(hasCats);
+        // catRef.child(seletedCatagory).child(selectedSubCatagory).child("ProductId").setValue(randomid);
+
+    }
     private void openGallery() {
         Intent galleryIntent = new Intent();
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, GalleryPick);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

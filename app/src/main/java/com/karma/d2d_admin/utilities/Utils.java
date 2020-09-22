@@ -62,4 +62,14 @@ public class Utils {
         }
 
     }
+    public static String getRandomId(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String curDate = dateFormat.format(new Date());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH-mm-ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String curTime = timeFormat.format(new Date());
+        return curDate.replace("-", "")+curTime.replace("-", "");
+
+    }
 }

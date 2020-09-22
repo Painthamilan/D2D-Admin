@@ -42,11 +42,12 @@ import java.util.HashMap;
 
 public class AdminViewProductActivity extends AppCompatActivity {
 
-    String key,downloadUrl;
+    String key,downloadUrl,selectedCatagory,selectedSubCatagory;
     EditText etPrice,etSpecification,etName,etPercentage;
-    TextView tvSelect,tvUpload,tvSave,tvAvailability;
+    TextView tvSelect,tvUpload,tvSave,tvAvailability,tvMove;
     ImageView ivImage,ivDelete;
     DatabaseReference productRef,imageRef,catRef;
+    boolean hasSub;
     Uri imageUri;
     int GalleryPick=1;
     private StorageReference itemStorageRef;
@@ -74,6 +75,39 @@ public class AdminViewProductActivity extends AppCompatActivity {
         rvImage=findViewById(R.id.rv_images);
         etPercentage=findViewById(R.id.et_percentage);
         ivDelete=findViewById(R.id.iv_delete);
+        tvMove=findViewById(R.id.tv_move_item);
+
+
+        tvMove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        selectedCatagory=dataSnapshot.child("ProductCatagory").getValue().toString();
+                        if (dataSnapshot.hasChild("ProductSubCatagory")){
+                            hasSub=true;
+                        }else {
+                            hasSub=false;
+                        }
+                        Intent intent=new Intent(AdminViewProductActivity.this,SelectRegionActivity.class);
+                        intent.putExtra("PRODUCT_ID",key);
+                        intent.putExtra("HAS_SUBCAT",hasSub);
+                        intent.putExtra("CATAGORY",selectedCatagory);
+                        if (hasSub)
+                            intent.putExtra("SUB_CATAGORY",selectedSubCatagory);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+        });
 
         final PopupMenu popup = new PopupMenu(this,tvAvailability);
         popup.getMenuInflater().inflate(R.menu.instant_available_menu, popup.getMenu());

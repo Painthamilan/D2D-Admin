@@ -34,11 +34,12 @@ import java.util.List;
 
 public class SelectRegionActivity extends AppCompatActivity {
 
-    String productId, origin;
+    String productId, origin,seletedCatagory,selectedSubCatagory;
     ListView rvRegion;
     ArrayAdapter aAdapter;
     DatabaseReference regRef,productRef;
     TextView tvSelectOrigin;
+    boolean hasSubCat;
 
 
     @Override
@@ -47,6 +48,10 @@ public class SelectRegionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_region);
 
         productId = getIntent().getStringExtra("PRODUCT_ID");
+        hasSubCat=getIntent().getBooleanExtra("HAS_SUBCAT",false);
+        seletedCatagory=getIntent().getStringExtra("CATAGORY");
+        selectedSubCatagory=getIntent().getStringExtra("SUB_CATAGORY");
+
         tvSelectOrigin = findViewById(R.id.tv_select_origin);
 
         rvRegion = findViewById(R.id.rv_regions);
@@ -64,8 +69,19 @@ public class SelectRegionActivity extends AppCompatActivity {
                 TextView add=view.findViewById(R.id.tv_add_region);
                 String string = textView.getText().toString();
                 regRef.child(string).child("RegionName").setValue(string);
-                regRef.child(string).child("Products").child(productId).child("ProductId").setValue(productId);
-                Toast.makeText(SelectRegionActivity.this, "Added to " + string, Toast.LENGTH_SHORT).show();
+                if (hasSubCat){
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("CatagoryName").setValue(selectedSubCatagory);
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("SubCatagories").child(selectedSubCatagory).child("SubCatagoryName").setValue(selectedSubCatagory);
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("SubCatagories").child(selectedSubCatagory).child("Products").child(productId).child("ProductId").setValue(productId);
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("HasSub").setValue(true);
+                }else {
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("CatagoryName").setValue(seletedCatagory);
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("HasSub").setValue(false);
+                    regRef.child(string).child("Catagories").child(seletedCatagory).child("Products").child(productId).child("ProductId").setValue(productId);
+
+
+                }
+               Toast.makeText(SelectRegionActivity.this, "Added to " + string, Toast.LENGTH_SHORT).show();
                 add.setText("Done");
             }
         });
