@@ -27,31 +27,30 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.utilities.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
-public class AddItemActivity extends AppCompatActivity {
-
+public class AddSliderActivity extends AppCompatActivity {
     private EditText etProductName,etPrice,etSpecifications,etPercentage;
     private ImageView ivProductImage;
     private TextView tvSelectcatagory,tvUpload,tvSelectImage,tvSelectSubCatagory;
-    private String seletedCatagory="",curDate,curTime,randomid,downloadUrl,selectedSubCatagory,specifications;
+    private String type,seletedCatagory="",curDate,curTime,randomid,downloadUrl,selectedSubCatagory,specifications;
     private StorageReference itemStorageRef;
     private DatabaseReference itemsRef,catRef,instantRef;
     private long countPosts;
-    private boolean isinstant,hasSubCat;
+    boolean hasSub;
     private static final int GalleryPick = 1;
     Uri imageUri;
 
     ProgressDialog progressdialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_add_slider);
         progressdialog = new ProgressDialog(this);
         progressdialog.setMessage("Please Wait....");
         progressdialog.setCancelable(false);
@@ -68,103 +67,84 @@ public class AddItemActivity extends AppCompatActivity {
         itemStorageRef= FirebaseStorage.getInstance().getReference().child("ProductImages");
         itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
         catRef=FirebaseDatabase.getInstance().getReference().child("Catagories");
-        hasSubCat=false;
+
+
         final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
 
         popup.getMenuInflater().inflate(R.menu.main_catagory, popup.getMenu());
-        isinstant=false;
+
         tvSelectcatagory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                hasSub=false;
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.main_cat_mobile:
                                 seletedCatagory = "Mobile";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
 
                             case R.id.main_cat_mobile_accessories:
                                 seletedCatagory = "Mobile Accessories";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
-
                             case R.id.main_cat_electronic:
-                                seletedCatagory = "Electronic";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                                seletedCatagory = "Electronics";
                                 break;
-
                             case R.id.main_cat_sports:
+                                hasSub=true;
                                 seletedCatagory = "Sports";
-                                tvSelectSubCatagory.setVisibility(View.VISIBLE);
-                                hasSubCat = true;
                                 break;
 
                             case R.id.main_cat_education:
+                                hasSub=true;
                                 seletedCatagory = "Education";
-                                tvSelectSubCatagory.setVisibility(View.VISIBLE);
-                                hasSubCat = true;
                                 break;
 
                             case R.id.main_cat_cab:
                                 seletedCatagory = "Cab";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+
                                 break;
 
                             case R.id.main_cat_gifts:
                                 seletedCatagory = "Gifts";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+
                                 break;
                             case R.id.main_cat_dth:
                                 seletedCatagory = "DTH";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_cctv:
                                 seletedCatagory = "CCTV";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_event_management:
                                 seletedCatagory = "Event Management";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_accessories:
                                 seletedCatagory = "Accessories";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cosmetics:
                                 seletedCatagory = "Cosmetics";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_birthday_party:
                                 seletedCatagory = "Birthday Party";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_second_hand:
                                 seletedCatagory = "Second Hand";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_essential_goods:
                                 seletedCatagory = "Essential Goods";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_clouth:
                                 seletedCatagory = "Clothings";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cake:
                                 seletedCatagory = "Cake";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_library:
                                 seletedCatagory = "Library";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                             case R.id.main_cat_flowers:
                                 seletedCatagory = "Flowers & Bouquests";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                         }
                         tvSelectcatagory.setText(seletedCatagory);
@@ -200,66 +180,36 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void validateSubmenus() {
-        switch (seletedCatagory){
-            case "Sports":
-                PopupMenu subMenuSports=new PopupMenu(this,tvSelectcatagory);
-                subMenuSports.getMenuInflater().inflate(R.menu.sub_catagory_sports, subMenuSports.getMenu());
-                subMenuSports.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.sub_cat_sports_cards:
-                                selectedSubCatagory="Cards";
-                                break;
-                            case R.id.sub_cat_sports_carrom:
-                                selectedSubCatagory="Carrom";
-                                break;
-                            case R.id.sub_cat_sports_tennis_ball:
-                                selectedSubCatagory="Tennis Ball";
-                                break;
-                            case R.id.sub_cat_sports_volly_ball:
-                                selectedSubCatagory="Volly Ball";
-                                break;
-                        }
-                        tvSelectSubCatagory.setText(selectedSubCatagory);
-                        return true;
-                    }
-                });
-                subMenuSports.show();
-                break;
+        final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
 
-            case "Education":
-                PopupMenu subMenuEducation=new PopupMenu(this,tvSelectcatagory);
-                subMenuEducation.getMenuInflater().inflate(R.menu.sub_catagory_education, subMenuEducation.getMenu());
+        popup.getMenuInflater().inflate(R.menu.slider_type, popup.getMenu());
 
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.type_catagory:
+                        type = "Catagory";
+                        break;
 
-                subMenuEducation.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.sub_cat_education_al:
-                                selectedSubCatagory="Advance Level";
-                                break;
-                            case R.id.sub_cat_education_ol:
-                                selectedSubCatagory="Ordianary Level";
-                                break;
-                            case R.id.sub_cat_education_other_stationary:
-                                selectedSubCatagory="Other Stationary";
-                                break;
-                            case R.id.sub_cat_education_syllabus:
-                                selectedSubCatagory="Scholardhip";
-                                break;
-                        }
-                        tvSelectSubCatagory.setText(selectedSubCatagory);
-                        return true;
-                    }
-                });
-                subMenuEducation.show();
-                break;
-            default:
-                Toast.makeText(this, "Please select Main catagory..", Toast.LENGTH_SHORT).show();
-        }
+                    case R.id.type_message:
+                        type = "Message";
+                        break;
 
+                    case R.id.type_offer:
+                        type = "Offer";
+                        break;
+
+                    case R.id.type_product:
+                        type = "Product";
+                        break;
+
+                }
+                tvSelectSubCatagory.setText(type);
+                return true;
+            }
+        });
+        popup.show();
     }
 
 
@@ -279,7 +229,7 @@ public class AddItemActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(AddItemActivity.this, "File Uploaded..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddSliderActivity.this, "File Uploaded..", Toast.LENGTH_SHORT).show();
 
                         filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
@@ -292,7 +242,7 @@ public class AddItemActivity extends AppCompatActivity {
                         });
                     } else {
                         String message = task.getException().getMessage();
-                        Toast.makeText(AddItemActivity.this, "UPLOAD ERROR" + message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddSliderActivity.this, "UPLOAD ERROR" + message, Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -301,15 +251,15 @@ public class AddItemActivity extends AppCompatActivity {
 
         }
         else {
-            Toast.makeText(AddItemActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddSliderActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
         }
 
 
     }
 
     private void savePostInformation() {
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
-        saveCats(hasSubCat,seletedCatagory);
+        itemsRef= FirebaseDatabase.getInstance().getReference().child("Slider");
+       // saveCats(hasSubCat,seletedCatagory);
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -328,11 +278,12 @@ public class AddItemActivity extends AppCompatActivity {
                 postMap.put("Price",etPrice.getText().toString());
                 postMap.put("Percentage",etPercentage.getText().toString());
                 postMap.put("ProductImage",downloadUrl);
+                postMap.put("SliderType",type);
                 postMap.put("Specifications",etSpecifications.getText().toString());
                 postMap.put("Counter", countPosts);
-                postMap.put("IsInstant", isinstant);
+                postMap.put("HasSub",hasSub);
 
-                itemsRef.child(randomid).updateChildren(postMap).addOnCompleteListener(new OnCompleteListener() {
+                itemsRef.child(type).updateChildren(postMap).addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()){
@@ -340,14 +291,6 @@ public class AddItemActivity extends AppCompatActivity {
 
                             progressdialog.dismiss();
 
-                            Intent intent=new Intent(AddItemActivity.this,SelectRegionActivity.class);
-                            intent.putExtra("PRODUCT_ID",randomid);
-                            intent.putExtra("HAS_SUBCAT",hasSubCat);
-                            intent.putExtra("CATAGORY",seletedCatagory);
-                            if (hasSubCat)
-                                intent.putExtra("SUB_CATAGORY",selectedSubCatagory);
-
-                            startActivity(intent);
                         }
                     }
                 });

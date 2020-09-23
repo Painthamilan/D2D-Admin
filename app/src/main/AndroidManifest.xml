@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_new"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
-        <activity android:name=".SelectRegionActivity"></activity>
+        <activity android:name=".AddSliderActivity"></activity>
+        <activity android:name=".SelectRegionActivity" />
         <activity android:name=".CatsDetailActivity" />
         <activity android:name=".AddItemActivity" />
         <activity android:name=".AddOffersActivity" />

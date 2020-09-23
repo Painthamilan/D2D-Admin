@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.firebase.auth.FirebaseAuth;
 import com.karma.d2d_admin.AddItemActivity;
 import com.karma.d2d_admin.AddOffersActivity;
+import com.karma.d2d_admin.AddSliderActivity;
 import com.karma.d2d_admin.LoginActivity;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.ViewAllOrdersActivity;
@@ -24,7 +25,7 @@ import com.karma.d2d_admin.ViewSubCatsActivity;
 public class ItemFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
-    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems;
+    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +80,17 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        tvAddSlider=root.findViewById(R.id.tv_add_slider);
+        tvAddSlider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(getContext(), AddSliderActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return root;
     }
 }

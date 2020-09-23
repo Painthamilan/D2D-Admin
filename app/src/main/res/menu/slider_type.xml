@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/type_product"
+        android:title="Product"/>
+
+    <item
+        android:id="@+id/type_catagory"
+        android:title="Catagory "/>
+
+    <item
+        android:id="@+id/type_message"
+        android:title="Message"/>
+    <item
+        android:id="@+id/type_offer"
+        android:title="Offer"/>
+</menu>
