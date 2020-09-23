@@ -65,9 +65,9 @@ public class AddItemActivity extends AppCompatActivity {
         tvUpload=findViewById(R.id.tv_upload);
         tvSelectSubCatagory=findViewById(R.id.tv_select_sub_catogary);
 
-        itemStorageRef= FirebaseStorage.getInstance().getReference().child("Test").child("ProductImages");
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Test").child("Products");
-        catRef=FirebaseDatabase.getInstance().getReference().child("Test").child("Catagories");
+        itemStorageRef= FirebaseStorage.getInstance().getReference().child("ProductImages");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
+        catRef=FirebaseDatabase.getInstance().getReference().child("Catagories");
         hasSubCat=false;
         final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
 
@@ -296,7 +296,7 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void savePostInformation() {
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Test").child("Products");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
         saveCats(hasSubCat,seletedCatagory);
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override

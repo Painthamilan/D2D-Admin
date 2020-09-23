@@ -56,8 +56,8 @@ public class SelectRegionActivity extends AppCompatActivity {
 
         rvRegion = findViewById(R.id.rv_regions);
         String[] regs = getResources().getStringArray(R.array.regions);
-        regRef = FirebaseDatabase.getInstance().getReference().child("Test").child("Regions");
-        productRef=FirebaseDatabase.getInstance().getReference().child("Test").child("Products").child(productId);
+        regRef = FirebaseDatabase.getInstance().getReference().child("Regions");
+        productRef=FirebaseDatabase.getInstance().getReference().child("Products").child(productId);
 
         aAdapter = new ArrayAdapter(this, R.layout.region_selector_layout, R.id.tv_region_name, regs);
         rvRegion.setAdapter(aAdapter);
