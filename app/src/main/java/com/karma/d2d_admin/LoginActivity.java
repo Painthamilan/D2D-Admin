@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import com.karma.d2d_admin.domains.Constants;
 
 public class LoginActivity extends AppCompatActivity {
     EditText etMail,etPassword;
-    String mail,password,curUser;
+    String mail,password,curUser,region;
     TextView tvLogin,newAccount;
     private FirebaseAuth cfAuth;
     private DatabaseReference userRef;
@@ -66,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 else if (password.isEmpty()){
                     Toast.makeText(LoginActivity.this, "Please enter a new password", Toast.LENGTH_SHORT).show();
                 }else {
-                    allowUserToLogin();
+                    allowUserToLogin(mail);
                 }
 
 
@@ -74,12 +75,96 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void allowUserToLogin() {
-        cfAuth.signInWithEmailAndPassword(mail,password)
+    private void allowUserToLogin(final String mail) {
+        cfAuth.signInWithEmailAndPassword(this.mail,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
+                            switch (mail){
+                                case "admin@karma.com":
+                                    region="Main";
+                                    break;
+                                case "d2dmannar@karma.com":
+                                    region="Mannar";
+                                    break;
+                                case "d2djaffna@karma.com":
+                                    region="Jaffna";
+                                    break;
+                                case "d2dkandy@karma.com":
+                                    region="Kandy";
+                                    break;
+                                case "d2dcolombo@karma.com":
+                                    region="Colombo";
+                                    break;
+                                case "d2dmatale@karma.com":
+                                    region="Matale";
+                                    break;
+                                case "d2dkilinochi@karma.com":
+                                    region="Kilinochi";
+                                    break;
+                                case "d2dmullaitivu@karma.com":
+                                    region = "Mullaitivu";
+                                    break;
+                                case "d2dnuwaraeliya@karma.com":
+                                    region = "NuwaraEliya";
+                                    break;
+                                case "d2dampara@karma.com":
+                                    region = "Ampara";
+                                    break;
+                                case "d2danuradhapura@karma.com":
+                                    region = "Anuradhapura";
+                                    break;
+                                case "d2dbadulla@karma.com":
+                                    region = "Badulla";
+                                    break;
+                                case "d2dbatticaloa@karma.com":
+                                    region = "Batticaloa";
+                                    break;
+                                case "d2dgalle@karma.com":
+                                    region = "Galle";
+                                    break;
+                                case "d2dgampaha@karma.com":
+                                    region = "Gampaha";
+                                    break;
+                                case "d2dhambantota@karma.com":
+                                    region = "Hambantota";
+                                    break;
+                                case "d2dkalutura@karma.com":
+                                    region = "Kalutara";
+                                    break;
+                                case "d2dkegalle@karma.com":
+                                    region = "Kegalle";
+                                    break;
+                                case "d2dkurunegala@karma.com":
+                                    region = "Kurunegala";
+                                    break;
+                                case "d2damatara@karma.com":
+                                    region = "Matara";
+                                    break;
+                                case "d2dmonaragala@karma.com":
+                                    region = "Monaragala";
+                                    break;
+                                case "d2dpolannaruwa@karma.com":
+                                    region = "Polannaruwa";
+                                    break;
+                                case "d2dputtalam@karma.com":
+                                    region = "Puttalam";
+                                    break;
+                                case "d2dratnapura@karma.com":
+                                    region = "Ratnapura";
+                                    break;
+                                case "d2dtrincomalee@karma.com":
+                                    region = "Trincomalee";
+                                    break;
+                                case "d2dvavuniya@karma.com":
+                                    region = "Vavuniya";
+                                    break;
+
+                            }
+                            SharedPreferences.Editor editor=getSharedPreferences("REGION_SELECTOR",MODE_PRIVATE).edit();
+                            editor.putString("REGION",region);
+                            editor.apply();
                             validateProfile();
                             // SendUserToMainActivity();
                             Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();

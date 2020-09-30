@@ -17,9 +17,12 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.karma.d2d_admin.domains.Constants;
 import com.karma.d2d_admin.domains.Orders;
 import com.squareup.picasso.Picasso;
@@ -38,7 +41,7 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
         cfAuth=FirebaseAuth.getInstance();
         curUserId=cfAuth.getCurrentUser().getUid();
         rvOrders=findViewById(R.id.rv_list_orders);
-        orderRef= FirebaseDatabase.getInstance().getReference().child("Orders");
+        orderRef= FirebaseDatabase.getInstance().getReference().child("Regions").child("Jaffna").child("Orders");
         rvOrders.setHasFixedSize(true);
         // rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -59,8 +62,7 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
                     .orderByChild("Counter");
         }else {
             ordersQuery = orderRef
-                    .orderByChild("UserId")
-                    .equalTo(curUserId);
+                    .orderByChild("Counter");
         }
 
         FirebaseRecyclerAdapter<Orders, OrderViewHolder> firebaseRecyclerAdapter =
@@ -74,10 +76,18 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(OrderViewHolder postViewHolder, Orders model, int position) {
                         final String postKey = getRef(position).getKey();
-                        postViewHolder.setProductName(model.getProductName());
-                        postViewHolder.setProductImage(model.getProductImage());
-                        postViewHolder.setOrderStatus(model.getStatus());
-                        postViewHolder.dropDownClicker(postKey,ViewAllOrdersActivity.this);
+                        postViewHolder.setProductName(postKey);
+                       // postViewHolder.setProductImage(model.getProductImage());
+                       // postViewHolder.setOrderStatus(model.getStatus());
+                        postViewHolder.ivDownArrov.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DatabaseReference ordersRef=FirebaseDatabase.getInstance().getReference().child("Orders").child(postKey);
+                                ordersRef.removeValue();
+                                orderRef.child(postKey).removeValue();
+
+                            }
+                        });
                         postViewHolder.cfView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -112,15 +122,32 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
 
 
             curUserId=cfAuth.getCurrentUser().getUid();
-            if (curUserId.equals(Constants.ADMIN_ID)){
-                ivDownArrov.setVisibility(View.VISIBLE);
-            }
 
         }
 
 
-        public void setProductName(String catagoryName) {
-            tvCatName.setText(catagoryName);
+        public void setProductName(String postKey) {
+           // tvCatName.setText(catagoryName);
+            DatabaseReference orderRef=FirebaseDatabase.getInstance().getReference().child("Orders").child(postKey);
+            orderRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.exists()){
+                        String name=dataSnapshot.child("ProductName").getValue().toString();
+                        tvCatName.setText(name);
+                        String status=dataSnapshot.child("Status").getValue().toString();
+                        tvStatus.setText(status);
+                        String img=dataSnapshot.child("ProductImage").getValue().toString();
+                        Picasso.get().load(img).into(ivCatImage);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
         }
 
@@ -142,30 +169,6 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            switch (item.getItemId()) {
-                                case R.id.state_confirm_order:
-                                    updateState("Confirmed", orderId);
-                                    break;
-                                case R.id.state_pack_order:
-                                    updateState("Packed", orderId);
-                                    break;
-                                case R.id.state_carry_order:
-                                    updateState("On the way", orderId);
-                                    break;
-                                case R.id.state_deliver_order:
-                                    updateState("Delivered", orderId);
-                                    break;
-                                case R.id.state_return_order:
-                                    updateState("Returned", orderId);
-                                    break;
-                            }
-                            return true;
-                        }
-                    });
-                    popup.show();
                 }
             });
 

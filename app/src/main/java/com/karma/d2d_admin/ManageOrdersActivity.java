@@ -23,9 +23,9 @@ import com.squareup.picasso.Picasso;
 public class ManageOrdersActivity extends AppCompatActivity {
 
     ImageView ivProductImage;
-    TextView tvProductName,tvPhoneNumber,tvAddress,tvPrice,tvSelect,tvQuantity;
+    TextView tvProductName,tvPhoneNumber,tvAddress,tvPrice,tvSelect,tvQuantity,tvCustomerName;
     DatabaseReference orderRef;
-    String orderId,state,email,userId,productImage;
+    String orderId,state,email,userId,productImage,customerName;
     DatabaseReference userRef;
     long countPosts;
     @Override
@@ -39,6 +39,7 @@ public class ManageOrdersActivity extends AppCompatActivity {
         tvPrice=findViewById(R.id.tv_price);
         tvSelect=findViewById(R.id.tv_select);
         tvQuantity=findViewById(R.id.tv_quantity);
+        tvCustomerName=findViewById(R.id.tv_customer_name);
         orderId=getIntent().getStringExtra("OrderId");
 
         orderRef= FirebaseDatabase.getInstance().getReference().child("Orders").child(orderId);
@@ -62,6 +63,8 @@ public class ManageOrdersActivity extends AppCompatActivity {
                     tvQuantity.setText(quantity);
                     email=dataSnapshot.child("Email").getValue().toString();
                     userId=dataSnapshot.child("UserId").getValue().toString();
+                    customerName=dataSnapshot.child("CustomerName").getValue().toString();
+                    tvCustomerName.setText(customerName);
 
                 }
             }

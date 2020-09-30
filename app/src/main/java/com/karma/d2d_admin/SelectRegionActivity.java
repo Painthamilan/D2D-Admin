@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,16 +37,17 @@ import java.util.List;
 
 public class SelectRegionActivity extends AppCompatActivity {
 
-    String productId, origin,seletedCatagory,selectedSubCatagory;
+    String productId, origin,seletedCatagory,selectedSubCatagory,region;
     ListView rvRegion;
     ArrayAdapter aAdapter;
     DatabaseReference regRef,productRef;
-    TextView tvSelectOrigin;
+    TextView tvSelectOrigin,tvFinish;
     boolean hasSubCat;
 
+    ProgressDialog progressdialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_region);
 
@@ -52,7 +56,20 @@ public class SelectRegionActivity extends AppCompatActivity {
         seletedCatagory=getIntent().getStringExtra("CATAGORY");
         selectedSubCatagory=getIntent().getStringExtra("SUB_CATAGORY");
 
+        progressdialog = new ProgressDialog(this);
+        progressdialog.setMessage("Please Wait....");
+        progressdialog.setCancelable(false);
+
         tvSelectOrigin = findViewById(R.id.tv_select_origin);
+        tvFinish=findViewById(R.id.tv_finish);
+        tvFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(SelectRegionActivity.this,BottomBarMain.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
 
         rvRegion = findViewById(R.id.rv_regions);
         String[] regs = getResources().getStringArray(R.array.regions);
@@ -65,6 +82,7 @@ public class SelectRegionActivity extends AppCompatActivity {
         rvRegion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                progressdialog.show();
                 TextView textView = view.findViewById(R.id.tv_region_name);
                 TextView add=view.findViewById(R.id.tv_add_region);
                 String string = textView.getText().toString();
@@ -82,13 +100,21 @@ public class SelectRegionActivity extends AppCompatActivity {
 
                 }
                Toast.makeText(SelectRegionActivity.this, "Added to " + string, Toast.LENGTH_SHORT).show();
-                add.setText("Done");
+                progressdialog.dismiss();
             }
         });
 
         final PopupMenu popup = new PopupMenu(this, tvSelectOrigin);
 
         popup.getMenuInflater().inflate(R.menu.region_menu, popup.getMenu());
+
+        SharedPreferences  preferences=getSharedPreferences("REGION_SELECTOR",MODE_PRIVATE);
+        region=preferences.getString("REGION","");
+
+        if (!region.equals("Main")){
+            tvSelectOrigin.setVisibility(View.INVISIBLE);
+            productRef.child("Origin").setValue(region);
+        }
 
         tvSelectOrigin.setOnClickListener(new View.OnClickListener() {
             @Override

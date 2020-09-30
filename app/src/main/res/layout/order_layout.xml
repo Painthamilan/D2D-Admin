@@ -52,9 +52,8 @@
         android:id="@+id/iv_down_arrow"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:tint="@color/black"
-        android:visibility="invisible"
+        android:tint="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        app:srcCompat="@drawable/ic_clear_black_48dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
