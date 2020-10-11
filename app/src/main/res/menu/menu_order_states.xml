@@ -19,4 +19,8 @@
         android:id="@+id/state_return_order"
         android:title="Returned"/>
 
+    <item
+        android:id="@+id/state_not_available"
+        android:title="Not Available"/>
+
 </menu>

@@ -52,19 +52,21 @@ public class ManageOrdersActivity extends AppCompatActivity {
                     productImage=dataSnapshot.child("ProductImage").getValue().toString();
                     Picasso.get().load(productImage).into(ivProductImage);
                     String productName=dataSnapshot.child("ProductName").getValue().toString();
-                    tvProductName.setText(productName);
+                    tvProductName.setText("Product : "+productName);
                     String price=dataSnapshot.child("Price").getValue().toString();
-                    tvPrice.setText(price);
+                    tvPrice.setText("Price : "+price);
                     String phone=dataSnapshot.child("PhoneNumber").getValue().toString();
-                    tvPhoneNumber.setText(phone);
+                    tvPhoneNumber.setText("Phone : "+phone);
                     String address=dataSnapshot.child("Address").getValue().toString();
-                    tvAddress.setText(address);
+                    tvAddress.setText("Address : "+address);
                     String quantity=dataSnapshot.child("Quantity").getValue().toString();
-                    tvQuantity.setText(quantity);
+                    tvQuantity.setText("Quanitity : "+quantity);
                     email=dataSnapshot.child("Email").getValue().toString();
                     userId=dataSnapshot.child("UserId").getValue().toString();
-                    customerName=dataSnapshot.child("CustomerName").getValue().toString();
-                    tvCustomerName.setText(customerName);
+                    if (dataSnapshot.hasChild("CustomerName")) {
+                        customerName = dataSnapshot.child("CustomerName").getValue().toString();
+                        tvCustomerName.setText("User : "+customerName);
+                    }
 
                 }
             }
@@ -110,6 +112,11 @@ public class ManageOrdersActivity extends AppCompatActivity {
                                 updateState("Returned", orderId);
                                 showPopup(state);
                                 break;
+                            case R.id.state_not_available:
+                                state = "Not Available";
+                                updateState("Not Available", orderId);
+                                showPopup(state);
+                                break;
                         }
                         return true;
                     }
@@ -124,23 +131,28 @@ public class ManageOrdersActivity extends AppCompatActivity {
         switch (state) {
             case "Confirmed":
                 sendMessage("Order Confirmed","Your oeder is confirmed. You can see more details by D2D App ==> Profile ==> My Orders.  \n" +
-                        "Thank you foe using D2D");
+                        "Thank you for using D2D");
                 break;
             case "Packed":
                 sendMessage("Order Packed","Your oeder is packed. You can see more details by D2D App ==> Profile ==> My Orders.  \n" +
-                        "Thank you foe using D2D");
+                        "Thank you for using D2D");
                 break;
             case "On the way":
                 sendMessage("Order on the way","Your oeder is on the way. You can see more details by D2D App ==> Profile ==> My Orders.  \n" +
-                        "Thank you foe using D2D");
+                        "Thank you for using D2D");
                 break;
             case "Delivered":
                 sendMessage("Order Delivered","Your oeder is delivered. You can see more details by D2D App ==> Profile ==> My Orders.  \n" +
-                        "Thank you foe using D2D");
+                        "Thank you for using D2D");
                 break;
             case "Returned":
                 sendMessage("Return accepted","Your oeder is returned. You can see more details by D2D App ==> Profile ==> My Orders.  \n" +
-                        "Thank you foe yousing D2D");
+                        "Thank you for yousing D2D");
+                break;
+            case "Not Available":
+                sendMessage("Not vailable","We are extremely sorry!  \n" +
+                        "Your product is currently unavailable! . Sorry for inconveniences.  \n" +
+                        "Thank you for yousing D2D");
                 break;
         }
          /*Intent i = new Intent(Intent.ACTION_SEND);

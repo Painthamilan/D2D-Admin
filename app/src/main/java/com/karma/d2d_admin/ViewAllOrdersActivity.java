@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
     RecyclerView rvOrders;
     DatabaseReference orderRef;
     FirebaseAuth cfAuth;
-    String curUserId;
+    String curUserId,region;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +42,14 @@ public class ViewAllOrdersActivity extends AppCompatActivity {
         cfAuth=FirebaseAuth.getInstance();
         curUserId=cfAuth.getCurrentUser().getUid();
         rvOrders=findViewById(R.id.rv_list_orders);
-        orderRef= FirebaseDatabase.getInstance().getReference().child("Regions").child("Jaffna").child("Orders");
+        SharedPreferences preferences=getSharedPreferences("REGION_SELECTOR",MODE_PRIVATE);
+        region=preferences.getString("REGION","");
+        if (region.equals("Main")){
+            orderRef= FirebaseDatabase.getInstance().getReference().child("Orders");
+
+        }else {
+            orderRef = FirebaseDatabase.getInstance().getReference().child("Regions").child(region).child("Orders");
+        }
         rvOrders.setHasFixedSize(true);
         // rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);

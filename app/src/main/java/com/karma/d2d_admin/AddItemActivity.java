@@ -82,6 +82,12 @@ public class AddItemActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+
+                            case R.id.online_courses:
+                                seletedCatagory = "Online Courses";
+                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                                break;
+
                             case R.id.main_cat_mobile:
                                 seletedCatagory = "Mobile";
                                 tvSelectSubCatagory.setVisibility(View.INVISIBLE);
@@ -265,45 +271,48 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void storeImage() {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        curDate = dateFormat.format(new Date());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH-mm-ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        curTime = timeFormat.format(new Date());
-        randomid=curDate.replace("-", "")+curTime.replace("-", "");
+        if(!seletedCatagory.equals("")) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            curDate = dateFormat.format(new Date());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH-mm-ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            curTime = timeFormat.format(new Date());
+            randomid = curDate.replace("-", "") + curTime.replace("-", "");
 
-        if (imageUri != null&&!etPrice.getText().toString().isEmpty()&&!etProductName.getText().toString().isEmpty()) {
-            final StorageReference filepath = itemStorageRef.child(imageUri.getLastPathSegment() + randomid + "jpg");
-            filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(AddItemActivity.this, "File Uploaded..", Toast.LENGTH_SHORT).show();
+            if (imageUri != null && !etPrice.getText().toString().isEmpty() && !etProductName.getText().toString().isEmpty()) {
+                final StorageReference filepath = itemStorageRef.child(imageUri.getLastPathSegment() + randomid + "jpg");
+                filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(AddItemActivity.this, "File Uploaded..", Toast.LENGTH_SHORT).show();
 
-                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
+                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
 
-                                downloadUrl = uri.toString();
-                                savePostInformation();
+                                    downloadUrl = uri.toString();
+                                    savePostInformation();
 
-                            }
-                        });
-                    } else {
-                        String message = task.getException().getMessage();
-                        Toast.makeText(AddItemActivity.this, "UPLOAD ERROR" + message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            String message = task.getException().getMessage();
+                            Toast.makeText(AddItemActivity.this, "UPLOAD ERROR" + message, Toast.LENGTH_SHORT).show();
 
+                        }
                     }
-                }
-            });
+                });
 
 
+            } else {
+                Toast.makeText(AddItemActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(this, "Please SELECT CATAGORY", Toast.LENGTH_LONG).show();
+            progressdialog.dismiss();
         }
-        else {
-            Toast.makeText(AddItemActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-        }
-
 
     }
 
