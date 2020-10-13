@@ -1,16 +1,23 @@
 package com.karma.d2d_admin.fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karma.d2d_admin.AddItemActivity;
 import com.karma.d2d_admin.AddOffersActivity;
 import com.karma.d2d_admin.AddOnlineCoursesActivity;
@@ -23,13 +30,17 @@ import com.karma.d2d_admin.ViewSubCatsActivity;
 public class ItemFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
-    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider,tvAddOnlineCourses;
+    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider,tvAddOnlineCourses,
+            tvApplications;
 
+    String catName;
+    DatabaseReference catRef;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
 
+        catRef= FirebaseDatabase.getInstance().getReference().child("Test").child("Catagories");
         cfAuth=FirebaseAuth.getInstance();
         tvMyOrders=root.findViewById(R.id.tv_my_orders);
         tvMyOrders.setOnClickListener(new View.OnClickListener() {
@@ -57,17 +68,8 @@ public class ItemFragment extends Fragment {
             }
         });
 
-        tvManageInstants=root.findViewById(R.id.tv_manage_instants);
-        tvManageInstants.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), ViewSubCatsActivity.class);
-                intent.putExtra("CAT_NAME","Instant");
-                intent.putExtra("IsInstant",true);
+        tvManageInstants=root.findViewById(R.id.tv_add_catagory);
 
-                startActivity(intent);
-            }
-        });
 
         tvAddNewItems=root.findViewById(R.id.tv_add_new);
         tvAddNewItems.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +100,36 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        tvManageInstants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ItemFragment.this.getContext(), R.style.AlertDialogTheme).setCancelable(true);
+                View rowView = LayoutInflater.from(ItemFragment.this.getContext()).inflate(R.layout.layout_add_cat, null);
+                dialogBuilder.setView(rowView);
+                final AlertDialog dialog = dialogBuilder.create();
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+                }
 
+                TextView tvDone=rowView.findViewById(R.id.tv_cat_name);
+                final EditText etCatName=rowView.findViewById(R.id.et_cat_name);
+
+                tvDone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       catName=etCatName.getText().toString();
+                       if (TextUtils.isEmpty(catName)){
+                           Toast.makeText(ItemFragment.this.getContext(), "Please enter catagory name!", Toast.LENGTH_SHORT).show();
+                       }else {
+                           catRef.child(catName).child("CatagoryName").setValue(catName);
+                           catRef.child(catName).child("HasSub").setValue(false);
+                           dialog.dismiss();
+                       }
+                    }
+                });
+                dialog.show();
+            }
+        });
 
         return root;
     }

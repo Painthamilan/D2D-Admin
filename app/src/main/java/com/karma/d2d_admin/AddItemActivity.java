@@ -4,11 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.domains.Catagories;
+import com.karma.d2d_admin.fragments.CatagoriesFragment;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +57,7 @@ public class AddItemActivity extends AppCompatActivity {
     private boolean isinstant,hasSubCat;
     private static final int GalleryPick = 1;
     Uri imageUri;
+    DatabaseReference cfPostRef;
 
     ProgressDialog progressdialog;
 
@@ -71,13 +84,70 @@ public class AddItemActivity extends AppCompatActivity {
         hasSubCat=false;
         final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
 
+        tvSelectSubCatagory.setVisibility(View.INVISIBLE);
         popup.getMenuInflater().inflate(R.menu.main_catagory, popup.getMenu());
         isinstant=false;
         tvSelectcatagory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddItemActivity.this, R.style.AlertDialogTheme).setCancelable(false);
+                View rowView = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.layout_list_catagory, null);
+                dialogBuilder.setView(rowView);
+                final AlertDialog dialog = dialogBuilder.create();
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+                }
+                RecyclerView rvCatagory;
+                rvCatagory=rowView.findViewById(R.id.rv_list_cats);
+
+                LinearLayoutManager mLayoutManager = new LinearLayoutManager(AddItemActivity.this);
+
+                // Set the layout manager to your recyclerview
+
+
+                mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                rvCatagory.setLayoutManager(mLayoutManager);
+
+                DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvCatagory.getContext(),mLayoutManager.getOrientation());
+                rvCatagory.addItemDecoration(dividerItemDecoration);
+
+
+                FirebaseRecyclerAdapter<Catagories, CatsViewHolder> firebaseRecyclerAdapter =
+                        new FirebaseRecyclerAdapter<Catagories, CatsViewHolder>(
+                                Catagories.class,
+                                R.layout.layout_cat_name,
+                                CatsViewHolder.class,
+                                catRef
+
+                        ) {
+                            @Override
+                            protected void populateViewHolder(CatsViewHolder postViewHolder, final Catagories model, int position) {
+                                final String postKey = getRef(position).getKey();
+                                postViewHolder.setCatagoryName(model.getCatagoryName());
+
+                                postViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        seletedCatagory=model.getCatagoryName();
+                                        tvSelectcatagory.setText(seletedCatagory);
+                                        if (model.isHasSub()){
+                                            tvSelectSubCatagory.setVisibility(View.VISIBLE);
+
+                                        }else {
+                                            tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        };
+
+                rvCatagory.setAdapter(firebaseRecyclerAdapter);
+                dialog.show();
+
+               /* tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -177,6 +247,10 @@ public class AddItemActivity extends AppCompatActivity {
                     }
                 });
                 popup.show();
+                */
+
+
+
 
             }
         });
@@ -396,4 +470,26 @@ public class AddItemActivity extends AppCompatActivity {
         }
 
     }
+
+    public static class CatsViewHolder extends RecyclerView.ViewHolder {
+        View cfView;
+
+        TextView tvCatName;
+        ConstraintLayout constraintLayout;
+        public CatsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            cfView = itemView;
+            tvCatName=cfView.findViewById(R.id.tv_cat_name);
+            constraintLayout=cfView.findViewById(R.id.con_layout);
+        }
+
+
+        public void setCatagoryName(String catagoryName) {
+            tvCatName.setText(catagoryName);
+
+        }
+
+
+    }
+
 }
