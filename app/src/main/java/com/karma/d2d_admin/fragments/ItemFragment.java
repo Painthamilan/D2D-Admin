@@ -7,15 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.karma.d2d_admin.AddItemActivity;
 import com.karma.d2d_admin.AddOffersActivity;
+import com.karma.d2d_admin.AddOnlineCoursesActivity;
 import com.karma.d2d_admin.AddSliderActivity;
 import com.karma.d2d_admin.LoginActivity;
 import com.karma.d2d_admin.R;
@@ -25,7 +23,7 @@ import com.karma.d2d_admin.ViewSubCatsActivity;
 public class ItemFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
-    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider;
+    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider,tvAddOnlineCourses;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,6 +88,17 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        tvAddOnlineCourses=root.findViewById(R.id.tv_add_online_courses);
+        tvAddOnlineCourses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(getContext(), AddOnlineCoursesActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return root;
     }

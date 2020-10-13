@@ -2,9 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/online_courses"
-        android:title="Online Courses "/>
-    <item
         android:id="@+id/main_cat_mobile"
         android:title="Mobile "/>
 
@@ -18,7 +15,9 @@
     <item
         android:id="@+id/main_cat_accessories"
         android:title="Accessories "/>
-
+    <item
+        android:id="@+id/main_cat_paintings"
+        android:title="Paintings"/>
     <item
         android:id="@+id/main_cat_sports"
         android:title="Sports"/>

@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvProducts,rvTopFragments,rvInstants;
     private DatabaseReference cfPostRef,topRef,instantsRef;
     private TextView ivInstant,tvMobile;
-    ImageView tvCats,tvRecent;
+    TextView tvCats,tvRecent;
 
     AlertDialog.Builder dialogBuilder;
     AlertDialog dialog;
@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         final TextView textView = root.findViewById(R.id.text_home);
 
         tvCats=root.findViewById(R.id.tv_cats);
-        rvTopFragments=root.findViewById(R.id.rv_topItems);
+      //  rvTopFragments=root.findViewById(R.id.rv_topItems);
         tvRecent=root.findViewById(R.id.recent);
         tvContact=root.findViewById(R.id.tv_mobile);
         tvContact.setSelected(true);
@@ -93,11 +93,11 @@ public class HomeFragment extends Fragment {
 
 
 
-        rvTopFragments.setHasFixedSize(true);
-        LinearLayoutManager horizontalYalayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        horizontalYalayoutManager.setStackFromEnd(true);
-        rvTopFragments.setLayoutManager(horizontalYalayoutManager);
-        showTop();
+        //rvTopFragments.setHasFixedSize(true);
+        //LinearLayoutManager horizontalYalayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+       // horizontalYalayoutManager.setStackFromEnd(true);
+        //rvTopFragments.setLayoutManager(horizontalYalayoutManager);
+        //showTop();
 
         final ProgressDialog pd = new ProgressDialog(getContext());
         pd.setMessage("loading");
@@ -201,7 +201,7 @@ public class HomeFragment extends Fragment {
         }
 
         public void setProductImage(String productImage) {
-            Picasso.get().load(productImage).transform(new RoundedCorners(10, 0)).resize(100,100).into(ivproductImage);
+            Picasso.get().load(productImage).fit().into(ivproductImage);
         }
 
 

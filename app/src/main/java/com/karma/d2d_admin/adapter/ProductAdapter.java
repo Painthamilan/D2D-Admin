@@ -3,15 +3,20 @@ package com.karma.d2d_admin.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +28,7 @@ import com.karma.d2d_admin.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -58,7 +64,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
 
     @Override
-    public void onBindViewHolder(@NonNull ProductAdapter.ProductViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ProductAdapter.ProductViewHolder holder, final int position) {
 
         holder.getItemDetails(mProductsList.get(position).getProductId());
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +76,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 intent.putExtra("IsInstant", false);
                 context.startActivity(intent);
 
+
+            }
+        });
+
+        holder.ivDownArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                holder.manageDropdown(position);
 
             }
         });
@@ -86,6 +101,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         ImageView tvImage,ivDownArrow;
         ConstraintLayout constraintLayout;
         DatabaseReference itemRef;
+        String rank,sort;
+        PopupMenu popup;
+        DatabaseReference topRef;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +113,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             ivDownArrow=itemView.findViewById(R.id.iv_down_arrow);
 
             constraintLayout=itemView.findViewById(R.id.con_layout);
+            popup = new PopupMenu(context,ivDownArrow);
+            popup.getMenuInflater().inflate(R.menu.top_selector, popup.getMenu());
 
         }
         public void getItemDetails(String productId) {
@@ -119,5 +139,66 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             });
         }
 
+        public void manageDropdown(final int position) {
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.rank_first:
+                            rank="First";
+                            sort="a";
+                            break;
+                        case R.id.rank_second:
+                            rank="Second";
+                            sort="b";
+                            break;
+                        case R.id.rank_thirt:
+                            rank="Thirt";
+                            sort="c";
+                            break;
+                        case R.id.rank_forth:
+                            rank="Fourth";
+                            sort="d";
+                            break;
+                    }
+
+                    topRef=FirebaseDatabase.getInstance().getReference().child("TopItems")
+                            .child(rank);
+                    FirebaseDatabase.getInstance().getReference().child("Products").child(mProductsList.get(position).getProductId())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        HashMap hashMap = new HashMap();
+                                        hashMap.put("ItemId", mProductsList.get(position).getProductId());
+                                        hashMap.put("ItemImage", dataSnapshot.child("ProductImage").getValue().toString());
+                                        hashMap.put("ItemName", dataSnapshot.child("ProductName").getValue().toString());
+                                        hashMap.put("ItemPrice", dataSnapshot.child("Price").getValue().toString());
+                                        hashMap.put("Percentage", dataSnapshot.child("Percentage").getValue().toString());
+                                        hashMap.put("Rank", sort);
+                                        topRef.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                            @Override
+                                            public void onComplete(@NonNull Task task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+                    return true;
+                }
+            });
+            popup.show();
+        }
     }
 }

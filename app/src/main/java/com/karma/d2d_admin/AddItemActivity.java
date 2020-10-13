@@ -83,11 +83,6 @@ public class AddItemActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
 
-                            case R.id.online_courses:
-                                seletedCatagory = "Online Courses";
-                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
-                                break;
-
                             case R.id.main_cat_mobile:
                                 seletedCatagory = "Mobile";
                                 tvSelectSubCatagory.setVisibility(View.INVISIBLE);
@@ -170,6 +165,10 @@ public class AddItemActivity extends AppCompatActivity {
                                 break;
                             case R.id.main_cat_flowers:
                                 seletedCatagory = "Flowers & Bouquests";
+                                tvSelectSubCatagory.setVisibility(View.INVISIBLE);
+                                break;
+                            case R.id.main_cat_paintings:
+                                seletedCatagory = "Paintings";
                                 tvSelectSubCatagory.setVisibility(View.INVISIBLE);
                                 break;
                         }
