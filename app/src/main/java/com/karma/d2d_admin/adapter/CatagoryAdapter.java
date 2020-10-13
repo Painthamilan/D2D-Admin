@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.karma.d2d_admin.OnlineCourseActivity;
 import com.karma.d2d_admin.domains.Catagories;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.ViewItemsActivity;
@@ -69,13 +70,20 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.CatVie
                     intent.putExtra("hasSub", false);
                     context.startActivity(intent);
                 }else {
-                    Intent intent = new Intent(context, ViewItemsActivity.class);
-                    intent.putExtra("REF_KEY", catList.get(position).getCatagoryName());
-                    intent.putExtra("CAT_NAME", catList.get(position).getCatagoryName());
-                    intent.putExtra("MAIN_CAT_NAME", catList.get(position).getCatagoryName());
-                    intent.putExtra("hasSub", false);
+                    if (catList.get(position).getCatagoryName().equals("Online Courses")){
+                        Intent intent = new Intent(context, OnlineCourseActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(context, ViewItemsActivity.class);
+                        intent.putExtra("REF_KEY", catList.get(position).getCatagoryName());
+                        intent.putExtra("CAT_NAME", catList.get(position).getCatagoryName());
+                        intent.putExtra("MAIN_CAT_NAME", catList.get(position).getCatagoryName());
+                        intent.putExtra("hasSub", false);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(intent);
+                    }
 
-                    context.startActivity(intent);
                 }
 
 

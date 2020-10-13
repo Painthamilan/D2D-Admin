@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.karma.d2d_admin.AdminViewProductActivity;
 import com.karma.d2d_admin.AllCatActivity;
+import com.karma.d2d_admin.OnlineCourseActivity;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.RecentItemsActivity;
 import com.karma.d2d_admin.utilities.RoundedCorners;
@@ -37,7 +38,7 @@ public class HomeFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
     private String curUserId;
-    TextView etSearch,tvContact;
+    TextView etSearch,tvContact,tvOnlineCourses;
     private RecyclerView rvProducts,rvTopFragments,rvInstants;
     private DatabaseReference cfPostRef,topRef,instantsRef;
     private TextView ivInstant,tvMobile;
@@ -81,6 +82,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        tvOnlineCourses=root.findViewById(R.id.tv_online_courses);
+        tvOnlineCourses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), OnlineCourseActivity.class);
+                startActivity(intent);
+            }
+        });
 
         tvCats.setOnClickListener(new View.OnClickListener() {
             @Override
