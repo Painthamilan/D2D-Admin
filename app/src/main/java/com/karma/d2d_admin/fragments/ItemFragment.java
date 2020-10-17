@@ -25,12 +25,12 @@ import com.karma.d2d_admin.AddSliderActivity;
 import com.karma.d2d_admin.LoginActivity;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.ViewAllOrdersActivity;
-import com.karma.d2d_admin.ViewSubCatsActivity;
+import com.karma.d2d_admin.ViewApplicationsActivity;
 
 public class ItemFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
-    TextView tvMyOrders,tvAddOffers,tvManageInstants,tvAddNewItems,tvAddSlider,tvAddOnlineCourses,
+    TextView tvMyOrders,tvAddOffers, tvAddCatagory,tvAddNewItems,tvAddSlider,tvAddOnlineCourses,
             tvApplications;
 
     String catName;
@@ -39,9 +39,10 @@ public class ItemFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
-
-        catRef= FirebaseDatabase.getInstance().getReference().child("Test").child("Catagories");
+        catRef= FirebaseDatabase.getInstance().getReference().child("Catagories");
         cfAuth=FirebaseAuth.getInstance();
+
+
         tvMyOrders=root.findViewById(R.id.tv_my_orders);
         tvMyOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,8 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,8 +70,6 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        tvManageInstants=root.findViewById(R.id.tv_add_catagory);
 
 
         tvAddNewItems=root.findViewById(R.id.tv_add_new);
@@ -100,7 +101,10 @@ public class ItemFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        tvManageInstants.setOnClickListener(new View.OnClickListener() {
+
+
+        tvAddCatagory =root.findViewById(R.id.tv_add_catagory);
+        tvAddCatagory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ItemFragment.this.getContext(), R.style.AlertDialogTheme).setCancelable(true);
@@ -128,6 +132,15 @@ public class ItemFragment extends Fragment {
                     }
                 });
                 dialog.show();
+            }
+        });
+
+        tvApplications=root.findViewById(R.id.tv_view_applications);
+        tvApplications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), ViewApplicationsActivity.class);
+                startActivity(intent);
             }
         });
 
