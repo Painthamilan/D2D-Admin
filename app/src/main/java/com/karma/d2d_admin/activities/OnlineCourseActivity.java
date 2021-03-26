@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,75 +20,66 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.karma.d2d_admin.adapter.ProductAdapter;
-import com.karma.d2d_admin.domains.Products;
+import com.karma.d2d_admin.R;
+import com.karma.d2d_admin.adapter.CourseAdapter;
+import com.karma.d2d_admin.domains.Courses;
 import com.karma.d2d_admin.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewItemsActivity extends AppCompatActivity {
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
-    String catName, catImage, mainCatName, userId;
+public class OnlineCourseActivity extends AppCompatActivity {
+    String catName, catImage, mainCatName, userId,defaultDistrict;
     DatabaseReference subCatRef, instantsRef;
     Query mainRef;
     boolean hasSub;
-    RecyclerView rvCats;
+    RecyclerView rvCourses;
     FirebaseAuth cfAuth;
     boolean isInstant, isAdmin;
 
     final int ITEM_LOAD_COUNT = 5;
     int tota_item = 0, last_visible_item;
 
-    ProductAdapter productAdapter;
+    CourseAdapter courseAdapter;
     boolean isLoading = false, isMaxData = false;
     String last_node = "", last_key = "";
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_items);
+        setContentView(R.layout.activity_online_course);
+
         Utils.setTopBar(getWindow(),getResources());
-        cfAuth=FirebaseAuth.getInstance();
-        if (cfAuth.getCurrentUser() != null) {
-            userId = cfAuth.getCurrentUser().getUid().toString();
-        }else {
-            userId="bkblkhlkhlhjg";
-        }
 
-        rvCats=findViewById(R.id.rv_list_items);
 
-        catName=getIntent().getStringExtra("CAT_NAME");
-        mainCatName=getIntent().getStringExtra("MAIN_CAT_NAME");
-        hasSub=getIntent().getBooleanExtra("hasSub",false);
-        isInstant=getIntent().getBooleanExtra("IsInstant",false);
-        if(hasSub){
-            subCatRef= FirebaseDatabase.getInstance().getReference().child("Catagories").child(mainCatName).child("SubCatagories").child(catName).child("Products");
-        }else {
-            subCatRef= FirebaseDatabase.getInstance().getReference().child("Catagories").child(mainCatName).child("Products");
-        }
-        instantsRef=FirebaseDatabase.getInstance().getReference().child("Instants");
+        SharedPreferences preferences=getSharedPreferences("REGION_SELECTOR",MODE_PRIVATE);
+        defaultDistrict=preferences.getString("REGION","Kandy");
+
+
+
+        rvCourses=findViewById(R.id.rv_list_items);
+        subCatRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Online Courses");
+
 
         getLastItem();
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        // Set the layout manager to your recyclerview
-        mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvCats.setLayoutManager(mLayoutManager);
+        rvCourses.setLayoutManager(mLayoutManager);
 
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvCats.getContext(),mLayoutManager.getOrientation());
-        rvCats.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvCourses.getContext(),mLayoutManager.getOrientation());
+        rvCourses.addItemDecoration(dividerItemDecoration);
 
 
 
-        productAdapter = new ProductAdapter(this);
-        rvCats.setAdapter(productAdapter);
+        courseAdapter = new CourseAdapter(this);
+        rvCourses.setAdapter(courseAdapter);
 
         showAllItems();
 
-        rvCats.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvCourses.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -103,10 +95,8 @@ public class ViewItemsActivity extends AppCompatActivity {
             }
         });
 
-        productAdapter.notifyDataSetChanged();
-
+        courseAdapter.notifyDataSetChanged();
     }
-
     private void showAllItems() {
 
         if (!isMaxData) {
@@ -128,9 +118,9 @@ public class ViewItemsActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.hasChildren()) {
-                        List<Products> newProducts = new ArrayList<>();
+                        List<Courses> newProducts = new ArrayList<>();
                         for (DataSnapshot productSnapShot : snapshot.getChildren()) {
-                            newProducts.add(productSnapShot.getValue(Products.class));
+                            newProducts.add(productSnapShot.getValue(Courses.class));
                         }
                         last_node = newProducts.get(newProducts.size() - 1).getProductId();
 
@@ -139,7 +129,7 @@ public class ViewItemsActivity extends AppCompatActivity {
                         else
                             last_node = "end";
 
-                        productAdapter.addAll(newProducts);
+                        courseAdapter.addAll(newProducts);
                         isLoading = false;
 
                     } else {
@@ -173,7 +163,7 @@ public class ViewItemsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-                Toast.makeText(ViewItemsActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(OnlineCourseActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }

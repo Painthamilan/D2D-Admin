@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -23,16 +22,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.karma.d2d_admin.AdminViewProductActivity;
-import com.karma.d2d_admin.AllCatActivity;
-import com.karma.d2d_admin.OnlineCourseActivity;
+import com.karma.d2d_admin.activities.AdminViewProductActivity;
+import com.karma.d2d_admin.activities.AllCatActivity;
+import com.karma.d2d_admin.activities.OnlineCourseActivity;
 import com.karma.d2d_admin.R;
-import com.karma.d2d_admin.RecentItemsActivity;
-import com.karma.d2d_admin.utilities.RoundedCorners;
-import com.karma.d2d_admin.SearchActivity;
+import com.karma.d2d_admin.activities.RecentItemsActivity;
+import com.karma.d2d_admin.activities.SearchActivity;
 import com.karma.d2d_admin.domains.Top;
 import com.karma.d2d_admin.utilities.Utils;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class HomeFragment extends Fragment {
 
@@ -141,7 +141,7 @@ public class HomeFragment extends Fragment {
 
 
     private void showTop() {
-        topRef = FirebaseDatabase.getInstance().getReference().child("TopItems");
+        topRef = FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("TopItems");
         Query searchPeopleAndFriendsQuery = topRef.orderByChild("Rank");
         FirebaseRecyclerAdapter<Top, TopViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Top, TopViewHolder>(
@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment {
             }
 
 
-            topRef=FirebaseDatabase.getInstance().getReference().child("TopItems");
+            topRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("TopItems");
 
 
 

@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +17,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Constants;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -40,7 +43,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
         cfAuth=FirebaseAuth.getInstance();
-        userRef= FirebaseDatabase.getInstance().getReference().child("User");
+        userRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("User");
 
         tvCreate.setOnClickListener(new View.OnClickListener() {
             @Override

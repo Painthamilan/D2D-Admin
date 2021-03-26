@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,12 +24,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.SubCats;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class CatsDetailActivity extends AppCompatActivity {
 
@@ -64,7 +67,7 @@ public class CatsDetailActivity extends AppCompatActivity {
             Picasso.get().load(catImage).into(ivCatImage);
         }
 
-        cf_displaySubCatsRef = FirebaseDatabase.getInstance().getReference().child("Catagories").child(catName).child("SubCatagories");
+        cf_displaySubCatsRef = FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(catName).child("SubCatagories");
         rvSubCats=findViewById(R.id.rv_list_sub_cats);
         if (!isSub) {
             rvSubCats.setHasFixedSize(true);
@@ -75,15 +78,15 @@ public class CatsDetailActivity extends AppCompatActivity {
             // Set the layout manager to your recyclerview
             rvSubCats.setLayoutManager(mLayoutManager);
 
-            storeCatImageRef= FirebaseStorage.getInstance().getReference().child("Catagories").child(catName);
-            updateDetailsRef=FirebaseDatabase.getInstance().getReference().child("Catagories").child(catName);
+            storeCatImageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(catName);
+            updateDetailsRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(catName);
             imageLabel="CatagoryImage";
             showAllSubCats();
         }else {
             rvSubCats.setVisibility(View.INVISIBLE);
             imageLabel="SubCatagoryImage";
-            storeCatImageRef= FirebaseStorage.getInstance().getReference().child("Catagories").child(catName).child("SubCatagories");
-            updateDetailsRef=FirebaseDatabase.getInstance().getReference().child("Catagories").child(mainCatName).child("SubCatagories").child(catName);
+            storeCatImageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(catName).child("SubCatagories");
+            updateDetailsRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(mainCatName).child("SubCatagories").child(catName);
         }
 
         tvSelectImage.setOnClickListener(new View.OnClickListener() {

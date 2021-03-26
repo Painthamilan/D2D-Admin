@@ -18,20 +18,25 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.karma.d2d_admin.AddItemActivity;
-import com.karma.d2d_admin.AddOffersActivity;
-import com.karma.d2d_admin.AddOnlineCoursesActivity;
-import com.karma.d2d_admin.AddSliderActivity;
-import com.karma.d2d_admin.LoginActivity;
+import com.karma.d2d_admin.activities.AddItemActivity;
+import com.karma.d2d_admin.activities.AddMobilesActivity;
+import com.karma.d2d_admin.activities.AddOffersActivity;
+import com.karma.d2d_admin.activities.AddOnlineCoursesActivity;
+import com.karma.d2d_admin.activities.AddSliderActivity;
+import com.karma.d2d_admin.activities.LoginActivity;
 import com.karma.d2d_admin.R;
-import com.karma.d2d_admin.ViewAllOrdersActivity;
-import com.karma.d2d_admin.ViewApplicationsActivity;
+import com.karma.d2d_admin.activities.ShareImageActivity;
+import com.karma.d2d_admin.activities.ViewAllOrdersActivity;
+import com.karma.d2d_admin.activities.ViewApplicationsActivity;
+import com.karma.d2d_admin.utilities.Utils;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class ItemFragment extends Fragment {
 
     private FirebaseAuth cfAuth;
     TextView tvMyOrders,tvAddOffers, tvAddCatagory,tvAddNewItems,tvAddSlider,tvAddOnlineCourses,
-            tvApplications;
+            tvApplications,tvShareImage,tvAddMobile;
 
     String catName;
     DatabaseReference catRef;
@@ -39,10 +44,18 @@ public class ItemFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
-        catRef= FirebaseDatabase.getInstance().getReference().child("Catagories");
+        catRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories");
         cfAuth=FirebaseAuth.getInstance();
 
 
+        tvAddMobile=root.findViewById(R.id.tv_add_mobiles);
+        tvAddMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(), AddMobilesActivity.class);
+                startActivity(intent);
+            }
+        });
         tvMyOrders=root.findViewById(R.id.tv_my_orders);
         tvMyOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +157,14 @@ public class ItemFragment extends Fragment {
             }
         });
 
+        tvShareImage=root.findViewById(R.id.tv_share_image);
+        tvShareImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), ShareImageActivity.class);
+                startActivity(intent);
+            }
+        });
         return root;
     }
 }

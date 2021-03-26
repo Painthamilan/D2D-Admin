@@ -13,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
-import com.karma.d2d_admin.CourseDetailsActivity;
+import com.karma.d2d_admin.activities.CourseDetailsActivity;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Courses;
 import com.squareup.picasso.Picasso;

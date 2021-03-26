@@ -1,11 +1,7 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,24 +12,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.karma.d2d_admin.adapter.ProductAdapter;
-import com.karma.d2d_admin.adapter.RegionAdapter;
-import com.karma.d2d_admin.domains.Products;
-import com.karma.d2d_admin.domains.Region;
+import com.karma.d2d_admin.R;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class SelectRegionActivity extends AppCompatActivity {
 
@@ -73,8 +59,8 @@ public class SelectRegionActivity extends AppCompatActivity {
 
         rvRegion = findViewById(R.id.rv_regions);
         String[] regs = getResources().getStringArray(R.array.regions);
-        regRef = FirebaseDatabase.getInstance().getReference().child("Regions");
-        productRef=FirebaseDatabase.getInstance().getReference().child("Products").child(productId);
+        regRef = FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Regions");
+        productRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products").child(productId);
 
         aAdapter = new ArrayAdapter(this, R.layout.region_selector_layout, R.id.tv_region_name, regs);
         rvRegion.setAdapter(aAdapter);

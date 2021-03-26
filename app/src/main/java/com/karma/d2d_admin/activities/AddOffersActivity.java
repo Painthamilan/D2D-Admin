@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,11 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class AddOffersActivity extends AppCompatActivity {
 
@@ -55,8 +58,8 @@ public class AddOffersActivity extends AppCompatActivity {
         tvUpload=findViewById(R.id.tv_upload);
         tvSelect=findViewById(R.id.tv_select_image);
 
-        itemStorageRef= FirebaseStorage.getInstance().getReference().child("OfferImages");
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Offers");
+        itemStorageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("OfferImages");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Offers");
         tvSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +119,7 @@ public class AddOffersActivity extends AppCompatActivity {
     }
 
     private void savePostInformation() {
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Offers");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Offers");
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

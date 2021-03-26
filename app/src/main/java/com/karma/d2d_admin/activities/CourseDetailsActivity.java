@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -20,10 +20,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.utilities.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class CourseDetailsActivity extends AppCompatActivity {
 
@@ -56,7 +59,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         ivCourseImage = findViewById(R.id.iv_course_image);
 
         courseId=getIntent().getStringExtra("REF_KEY");
-        courseRef= FirebaseDatabase.getInstance().getReference().child("Online Courses").child(courseId);
+        courseRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Online Courses").child(courseId);
 
 
 

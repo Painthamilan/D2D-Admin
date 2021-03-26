@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,62 +12,83 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.karma.d2d_admin.adapter.RecentAdapter;
+import com.karma.d2d_admin.R;
+import com.karma.d2d_admin.adapter.ProductAdapter;
 import com.karma.d2d_admin.domains.Products;
 import com.karma.d2d_admin.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecentItemsActivity extends AppCompatActivity {
+public class ViewItemsActivity extends AppCompatActivity {
 
-
-    DatabaseReference cfPostRef;
-    RecyclerView rvProducts;
+    String catName, catImage, mainCatName, userId;
+    DatabaseReference subCatRef, instantsRef;
+    Query mainRef;
+    boolean hasSub;
+    RecyclerView rvCats;
+    FirebaseAuth cfAuth;
+    boolean isInstant, isAdmin;
 
     final int ITEM_LOAD_COUNT = 5;
     int tota_item = 0, last_visible_item;
 
-    RecentAdapter productAdapter;
+    ProductAdapter productAdapter;
     boolean isLoading = false, isMaxData = false;
     String last_node = "", last_key = "";
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recent_item);
-
+        setContentView(R.layout.activity_view_items);
         Utils.setTopBar(getWindow(),getResources());
-        rvProducts=findViewById(R.id.rv_list_recent);
+        cfAuth=FirebaseAuth.getInstance();
+        if (cfAuth.getCurrentUser() != null) {
+            userId = cfAuth.getCurrentUser().getUid().toString();
+        }else {
+            userId="bkblkhlkhlhjg";
+        }
+
+        rvCats=findViewById(R.id.rv_list_items);
+
+        catName=getIntent().getStringExtra("CAT_NAME");
+        mainCatName=getIntent().getStringExtra("MAIN_CAT_NAME");
+        hasSub=getIntent().getBooleanExtra("hasSub",false);
+        isInstant=getIntent().getBooleanExtra("IsInstant",false);
+        if(hasSub){
+            subCatRef= FirebaseDatabase.getInstance().getReference().child("Catagories").child(mainCatName).child("SubCatagories").child(catName).child("Products");
+        }else {
+            subCatRef= FirebaseDatabase.getInstance().getReference().child("Catagories").child(mainCatName).child("Products");
+        }
+        instantsRef=FirebaseDatabase.getInstance().getReference().child("Instants");
 
         getLastItem();
-
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         // Set the layout manager to your recyclerview
         mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvProducts.setLayoutManager(mLayoutManager);
+        rvCats.setLayoutManager(mLayoutManager);
 
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvProducts.getContext(),mLayoutManager.getOrientation());
-        rvProducts.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvCats.getContext(),mLayoutManager.getOrientation());
+        rvCats.addItemDecoration(dividerItemDecoration);
 
 
 
-        productAdapter = new RecentAdapter(this);
-        rvProducts.setAdapter(productAdapter);
+        productAdapter = new ProductAdapter(this);
+        rvCats.setAdapter(productAdapter);
 
-        showAllProducts();
+        showAllItems();
 
-        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvCats.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -76,7 +97,7 @@ public class RecentItemsActivity extends AppCompatActivity {
                 last_visible_item = mLayoutManager.findLastCompletelyVisibleItemPosition();
 
                 if (!isLoading && tota_item <= ((last_visible_item + ITEM_LOAD_COUNT))) {
-                    showAllProducts();
+                    showAllItems();
                     isLoading = true;
                 }
 
@@ -86,19 +107,20 @@ public class RecentItemsActivity extends AppCompatActivity {
         productAdapter.notifyDataSetChanged();
 
     }
-    private void showAllProducts() {
-        cfPostRef= FirebaseDatabase.getInstance().getReference().child("Products");
+
+    private void showAllItems() {
+
         if (!isMaxData) {
             Query query;
             if (TextUtils.isEmpty(last_node))
 
-                query = cfPostRef
+                query = subCatRef
                         .orderByKey()
                         .limitToFirst(ITEM_LOAD_COUNT);
 
             else
 
-                query = cfPostRef
+                query = subCatRef
                         .orderByKey()
                         .startAt(last_node)
                         .limitToFirst(ITEM_LOAD_COUNT);
@@ -138,9 +160,9 @@ public class RecentItemsActivity extends AppCompatActivity {
     }
 
     private void getLastItem() {
-        cfPostRef=FirebaseDatabase.getInstance().getReference().child("Products");
-        Query getLastKey = cfPostRef
-                .orderByChild("Counter")
+
+        Query getLastKey = subCatRef
+                .orderByKey()
                 .limitToLast(1);
         getLastKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -152,9 +174,8 @@ public class RecentItemsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-                Toast.makeText(RecentItemsActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ViewItemsActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

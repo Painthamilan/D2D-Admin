@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +27,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.karma.d2d_admin.utilities.Utils;
+import com.karma.d2d_admin.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class AddSliderActivity extends AppCompatActivity {
     private EditText etProductName,etPrice,etSpecifications,etPercentage;
@@ -64,9 +66,9 @@ public class AddSliderActivity extends AppCompatActivity {
         tvUpload=findViewById(R.id.tv_upload);
         tvSelectSubCatagory=findViewById(R.id.tv_select_sub_catogary);
 
-        itemStorageRef= FirebaseStorage.getInstance().getReference().child("ProductImages");
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
-        catRef=FirebaseDatabase.getInstance().getReference().child("Catagories");
+        itemStorageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("ProductImages");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
+        catRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories");
 
 
         final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
@@ -258,7 +260,7 @@ public class AddSliderActivity extends AppCompatActivity {
     }
 
     private void savePostInformation() {
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Slider");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Slider");
        // saveCats(hasSubCat,seletedCatagory);
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override

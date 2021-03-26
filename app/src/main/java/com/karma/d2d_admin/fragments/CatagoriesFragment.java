@@ -9,12 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,10 +18,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.karma.d2d_admin.CatsDetailActivity;
+import com.karma.d2d_admin.activities.CatsDetailActivity;
 import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Catagories;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class CatagoriesFragment extends Fragment {
 
@@ -52,7 +50,7 @@ public class CatagoriesFragment extends Fragment {
     }
 
     private void showAllCats() {
-        cfPostRef = FirebaseDatabase.getInstance().getReference().child("Catagories");
+        cfPostRef = FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories");
         FirebaseRecyclerAdapter<Catagories, CatsViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Catagories, CatsViewHolder>(
                         Catagories.class,

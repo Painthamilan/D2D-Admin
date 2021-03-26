@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.karma.d2d_admin.AdminViewProductActivity;
+import com.karma.d2d_admin.activities.AdminViewProductActivity;
 import com.karma.d2d_admin.domains.Products;
 import com.karma.d2d_admin.R;
 import com.squareup.picasso.Picasso;
@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     List<Products> mProductsList;
@@ -118,7 +120,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         }
         public void getItemDetails(String productId) {
-            itemRef= FirebaseDatabase.getInstance().getReference().child("Products").child(productId);
+            itemRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products").child(productId);
             itemRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -162,9 +164,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                             break;
                     }
 
-                    topRef=FirebaseDatabase.getInstance().getReference().child("TopItems")
+                    topRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("TopItems")
                             .child(rank);
-                    FirebaseDatabase.getInstance().getReference().child("Products").child(mProductsList.get(position).getProductId())
+                    FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products").child(mProductsList.get(position).getProductId())
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +16,12 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.SubCats;
+import com.karma.d2d_admin.utilities.Utils;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class ViewSubCatsActivity extends AppCompatActivity {
 
@@ -31,7 +35,7 @@ public class ViewSubCatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_sub_cats);
         catName=getIntent().getStringExtra("CAT_NAME");
         isInstant=getIntent().getBooleanExtra("IsInstant",false);
-        subCatRef= FirebaseDatabase.getInstance().getReference().child("Catagories").child(catName).child("SubCatagories");
+        subCatRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories").child(catName).child("SubCatagories");
 
         rvCats=findViewById(R.id.rv_list_sub_cats);
         rvCats.setHasFixedSize(true);

@@ -1,6 +1,9 @@
 package com.karma.d2d_admin.utilities;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
@@ -21,6 +24,7 @@ public class Utils {
 
 
     public static int CURRENT_NAVIGATION_BAR = R.id.navigation_home ;
+    public static String RELEASE_TYPE = "Live" ;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static void setTopBar(Window window, Resources resources) {
@@ -40,17 +44,7 @@ public class Utils {
         FirebaseAuth cfAuth= FirebaseAuth.getInstance();
         return cfAuth.getCurrentUser().getUid();
     }
-    public static String createRandomId(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String curDate = dateFormat.format(new Date());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH-mm-ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String curTime = timeFormat.format(new Date());
-        String randomId = curDate + curTime;
-        return randomId;
 
-    }
     public static String getActualPrice(String price,String percentage){
         if (!percentage.isEmpty()) {
             int percent = Integer.parseInt(percentage);
@@ -66,10 +60,23 @@ public class Utils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String curDate = dateFormat.format(new Date());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH-mm-ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("ss-mm-HH");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String curTime = timeFormat.format(new Date());
-        return curDate.replace("-", "")+curTime.replace("-", "");
+        return curTime.replace("-", "")+curDate.replace("-", "");
 
+    }
+
+    public static AlertDialog configDialog(Context context, View view) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, R.style.AlertDialogTheme).setCancelable(false);
+
+        dialogBuilder.setView(view);
+        AlertDialog dialog = dialogBuilder.create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            //dialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
+
+        }
+        return dialog;
     }
 }

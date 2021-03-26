@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +16,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Products;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -36,7 +39,7 @@ public class SearchActivity extends AppCompatActivity {
         etSearch=findViewById(R.id.et_search_bar);
         searchKey=etSearch.getText().toString().trim();
 
-        searchRef = FirebaseDatabase.getInstance().getReference().child("Products");
+        searchRef = FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
         rvSearchedItems.setHasFixedSize(true);
         rvSearchedItems.setLayoutManager(new LinearLayoutManager(this));
         //  SearchPeopleAndFriends("");

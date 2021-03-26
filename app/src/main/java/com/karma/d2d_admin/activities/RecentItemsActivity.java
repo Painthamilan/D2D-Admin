@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,22 +18,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.karma.d2d_admin.adapter.CatagoryAdapter;
-import com.karma.d2d_admin.domains.Catagories;
+import com.karma.d2d_admin.R;
+import com.karma.d2d_admin.adapter.RecentAdapter;
+import com.karma.d2d_admin.domains.Products;
 import com.karma.d2d_admin.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllCatActivity extends AppCompatActivity {
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
-    RecyclerView rvCats;
-    DatabaseReference listCatsRef;
+public class RecentItemsActivity extends AppCompatActivity {
+
+
+    DatabaseReference cfPostRef;
+    RecyclerView rvProducts;
 
     final int ITEM_LOAD_COUNT = 5;
     int tota_item = 0, last_visible_item;
 
-    CatagoryAdapter catagoryAdapter;
+    RecentAdapter productAdapter;
     boolean isLoading = false, isMaxData = false;
     String last_node = "", last_key = "";
 
@@ -43,31 +46,31 @@ public class AllCatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_cat);
-        Utils.setTopBar(getWindow(),getResources());
+        setContentView(R.layout.activity_recent_item);
 
-        final TextView textView = findViewById(R.id.text_dashboard);
-        rvCats = findViewById(R.id.rv_list_cats);
-        // rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        Utils.setTopBar(getWindow(),getResources());
+        rvProducts=findViewById(R.id.rv_list_recent);
 
         getLastItem();
+
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         // Set the layout manager to your recyclerview
         mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvCats.setLayoutManager(mLayoutManager);
+        rvProducts.setLayoutManager(mLayoutManager);
 
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvCats.getContext(),mLayoutManager.getOrientation());
-        rvCats.addItemDecoration(dividerItemDecoration);
+        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(rvProducts.getContext(),mLayoutManager.getOrientation());
+        rvProducts.addItemDecoration(dividerItemDecoration);
 
 
 
-        catagoryAdapter = new CatagoryAdapter(this);
-        rvCats.setAdapter(catagoryAdapter);
-        getCats();
+        productAdapter = new RecentAdapter(this);
+        rvProducts.setAdapter(productAdapter);
 
-        rvCats.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        showAllProducts();
+
+        rvProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -76,30 +79,29 @@ public class AllCatActivity extends AppCompatActivity {
                 last_visible_item = mLayoutManager.findLastCompletelyVisibleItemPosition();
 
                 if (!isLoading && tota_item <= ((last_visible_item + ITEM_LOAD_COUNT))) {
-                    getCats();
+                    showAllProducts();
                     isLoading = true;
                 }
 
             }
         });
 
-        catagoryAdapter.notifyDataSetChanged();
+        productAdapter.notifyDataSetChanged();
 
     }
-
-    private void getCats() {
-
+    private void showAllProducts() {
+        cfPostRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
         if (!isMaxData) {
             Query query;
             if (TextUtils.isEmpty(last_node))
 
-                query = FirebaseDatabase.getInstance().getReference().child("Catagories")
+                query = cfPostRef
                         .orderByKey()
                         .limitToFirst(ITEM_LOAD_COUNT);
 
             else
 
-                query = FirebaseDatabase.getInstance().getReference().child("Catagories")
+                query = cfPostRef
                         .orderByKey()
                         .startAt(last_node)
                         .limitToFirst(ITEM_LOAD_COUNT);
@@ -108,24 +110,23 @@ public class AllCatActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.hasChildren()) {
-                        List<Catagories> newCats = new ArrayList<>();
-                        for (DataSnapshot catSnapShot : snapshot.getChildren()) {
-                            newCats.add(catSnapShot.getValue(Catagories.class));
+                        List<Products> newProducts = new ArrayList<>();
+                        for (DataSnapshot productSnapShot : snapshot.getChildren()) {
+                            newProducts.add(productSnapShot.getValue(Products.class));
                         }
-                        last_node = newCats.get(newCats.size() - 1).getCatagoryName();
+                        last_node = newProducts.get(newProducts.size() - 1).getProductId();
 
                         if (!last_node.equals(last_key))
-                            newCats.remove(newCats.size() - 1);
+                            newProducts.remove(newProducts.size() - 1);
                         else
                             last_node = "end";
 
-                        catagoryAdapter.addAll(newCats);
+                        productAdapter.addAll(newProducts);
                         isLoading = false;
 
                     } else {
                         isLoading = false;
                         isMaxData = true;
-                        Toast.makeText(AllCatActivity.this, "No more", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -140,10 +141,9 @@ public class AllCatActivity extends AppCompatActivity {
     }
 
     private void getLastItem() {
-
-        Query getLastKey = FirebaseDatabase.getInstance().getReference()
-                .child("Catagories")
-                .orderByKey()
+        cfPostRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
+        Query getLastKey = cfPostRef
+                .orderByChild("Counter")
                 .limitToLast(1);
         getLastKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -155,7 +155,7 @@ public class AllCatActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-                Toast.makeText(AllCatActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecentItemsActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }

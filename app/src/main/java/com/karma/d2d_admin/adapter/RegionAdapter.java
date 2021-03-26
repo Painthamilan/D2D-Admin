@@ -1,31 +1,23 @@
 package com.karma.d2d_admin.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.karma.d2d_admin.AdminViewProductActivity;
 import com.karma.d2d_admin.R;
-import com.karma.d2d_admin.domains.Products;
 import com.karma.d2d_admin.domains.Region;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class RegionAdapter extends RecyclerView.Adapter<RegionAdapter.RegionViewHolder> {
     List<Region> mRegionList;
@@ -63,7 +55,7 @@ public class RegionAdapter extends RecyclerView.Adapter<RegionAdapter.RegionView
             public void onClick(View v) {
                 String reg=mRegionList.get(position).getRegionName();
 
-                regionRef=FirebaseDatabase.getInstance().getReference().child("Regions").child(reg);
+                regionRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Regions").child(reg);
                 regionRef.child("RegionName").setValue(reg);
                 regionRef.child("ProductId").setValue(productId);
                     Toast.makeText(context, "", Toast.LENGTH_SHORT).show();

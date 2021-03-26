@@ -12,11 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.karma.d2d_admin.OnlineCourseActivity;
+import com.karma.d2d_admin.activities.OnlineCourseActivity;
 import com.karma.d2d_admin.domains.Catagories;
 import com.karma.d2d_admin.R;
-import com.karma.d2d_admin.ViewItemsActivity;
-import com.karma.d2d_admin.ViewSubCatsActivity;
+import com.karma.d2d_admin.activities.ViewItemsActivity;
+import com.karma.d2d_admin.activities.ViewSubCatsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

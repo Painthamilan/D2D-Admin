@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,14 +35,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Catagories;
-import com.karma.d2d_admin.fragments.CatagoriesFragment;
-import com.squareup.picasso.Picasso;
+import com.karma.d2d_admin.utilities.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class AddItemActivity extends AppCompatActivity {
 
@@ -78,9 +79,9 @@ public class AddItemActivity extends AppCompatActivity {
         tvUpload=findViewById(R.id.tv_upload);
         tvSelectSubCatagory=findViewById(R.id.tv_select_sub_catogary);
 
-        itemStorageRef= FirebaseStorage.getInstance().getReference().child("ProductImages");
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
-        catRef=FirebaseDatabase.getInstance().getReference().child("Catagories");
+        itemStorageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("ProductImages");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
+        catRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories");
         hasSubCat=false;
         final PopupMenu popup = new PopupMenu(this,tvSelectcatagory);
 
@@ -390,7 +391,7 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void savePostInformation() {
-        itemsRef= FirebaseDatabase.getInstance().getReference().child("Products");
+        itemsRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Products");
         saveCats(hasSubCat,seletedCatagory);
         itemsRef.addValueEventListener(new ValueEventListener() {
             @Override

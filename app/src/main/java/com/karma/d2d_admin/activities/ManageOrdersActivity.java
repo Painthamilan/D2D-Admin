@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +17,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.utilities.Utils;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class ManageOrdersActivity extends AppCompatActivity {
 
@@ -42,8 +45,8 @@ public class ManageOrdersActivity extends AppCompatActivity {
         tvCustomerName=findViewById(R.id.tv_customer_name);
         orderId=getIntent().getStringExtra("OrderId");
 
-        orderRef= FirebaseDatabase.getInstance().getReference().child("Orders").child(orderId);
-        userRef=FirebaseDatabase.getInstance().getReference().child("User");
+        orderRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Orders").child(orderId);
+        userRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("User");
 
         orderRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -169,11 +172,11 @@ public class ManageOrdersActivity extends AppCompatActivity {
     }
 
     private void updateState(String state, String orderId) {
-        orderRef=FirebaseDatabase.getInstance().getReference().child("Orders").child(orderId);
+        orderRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Orders").child(orderId);
         orderRef.child("Status").setValue(state);
     }
     private void sendMessage(final String title, final String message) {
-        final String id= Utils.createRandomId();
+        final String id= Utils.getRandomId();
         userRef.child(userId).child("Notifications").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

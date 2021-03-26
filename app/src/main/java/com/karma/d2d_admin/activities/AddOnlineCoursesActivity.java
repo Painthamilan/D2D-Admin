@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +26,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.utilities.Utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class AddOnlineCoursesActivity extends AppCompatActivity {
     private EditText etCourseName,etCourseFee,etDetails,etRequirements,etDuration,etTeacherName;
@@ -66,10 +66,10 @@ public class AddOnlineCoursesActivity extends AppCompatActivity {
         tvUpload=findViewById(R.id.tv_upload);
         ivCourseImage=findViewById(R.id.iv_course_image);
 
-        courseStorageRef= FirebaseStorage.getInstance().getReference().child("CourseImages");
-        courseRef= FirebaseDatabase.getInstance().getReference().child("Online Courses");
+        courseStorageRef= FirebaseStorage.getInstance().getReference().child(RELEASE_TYPE).child("CourseImages");
+        courseRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Online Courses");
 
-        catRef=FirebaseDatabase.getInstance().getReference().child("Catagories");
+        catRef=FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Catagories");
 
         hasSubCat=false;
         tvSelect.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.karma.d2d_admin;
+package com.karma.d2d_admin.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,9 +20,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.karma.d2d_admin.R;
 import com.karma.d2d_admin.domains.Applications;
-import com.karma.d2d_admin.domains.Catagories;
 import com.squareup.picasso.Picasso;
+
+import static com.karma.d2d_admin.utilities.Utils.RELEASE_TYPE;
 
 public class ViewApplicationsActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class ViewApplicationsActivity extends AppCompatActivity {
 
 
 
-        appRef= FirebaseDatabase.getInstance().getReference().child("Applications");
+        appRef= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Applications");
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(ViewApplicationsActivity.this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -109,7 +110,7 @@ public class ViewApplicationsActivity extends AppCompatActivity {
         }
 
         public void setCourseImage(String courseName) {
-           Query query= FirebaseDatabase.getInstance().getReference().child("Online Courses")
+           Query query= FirebaseDatabase.getInstance().getReference().child(RELEASE_TYPE).child("Online Courses")
                    .orderByChild("CourseName")
                    .equalTo(courseName);
            query.addListenerForSingleValueEvent(new ValueEventListener() {

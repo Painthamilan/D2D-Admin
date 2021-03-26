@@ -9,7 +9,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@drawable/main_theme"
 
-tools:context=".AddItemActivity"
+tools:context=".activities.AddItemActivity"
 tools:ignore="GradleDependency">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
